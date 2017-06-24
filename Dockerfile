@@ -36,7 +36,8 @@ ENV CONFIG "\
         --with-file-aio \
         --with-ipv6 \
         --with-jemalloc \
-				--with-http_v2_module \
+		--with-http_v2_module \
+        --add-module=../ngx_http_substitutions_filter_module \
         "
 
 RUN \
@@ -53,6 +54,7 @@ RUN \
         jemalloc-dev \
         git \
     && git clone https://github.com/alibaba/tengine.git /usr/src/tengine \
+    && git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git /usr/src/ngx_http_substitutions_filter_module \
     && cd /usr/src/tengine \
     && ./configure $CONFIG \
     && make \
@@ -73,6 +75,7 @@ RUN \
     && apk add --virtual .nginx-rundeps $runDeps \
     && apk del .build-deps \
     && rm -rf /usr/src/tengine \
+    && rm -rf /usr/src/ngx_http_substitutions_filter_module \
     && apk add --no-cache gettext \
     \
     && ln -sf /dev/stdout /var/log/nginx/access.log \
